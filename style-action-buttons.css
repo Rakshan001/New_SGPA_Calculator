@@ -1,0 +1,120 @@
+/* Action buttons in history table */
+.action-btns {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+}
+
+.btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 0;
+    margin: 0.2rem;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.btn-view {
+    color: #4cc9f0;
+}
+
+.btn-view:hover {
+    background: rgba(76, 201, 240, 0.1);
+    box-shadow: 0 6px 15px rgba(76, 201, 240, 0.2);
+    border-color: rgba(76, 201, 240, 0.3);
+}
+
+.btn-edit {
+    color: #ffd166;
+}
+
+.btn-edit:hover {
+    background: rgba(255, 209, 102, 0.1);
+    box-shadow: 0 6px 15px rgba(255, 209, 102, 0.2);
+    border-color: rgba(255, 209, 102, 0.3);
+}
+
+.btn-names {
+    color: #06d6a0;
+}
+
+.btn-names:hover {
+    background: rgba(6, 214, 160, 0.1);
+    box-shadow: 0 6px 15px rgba(6, 214, 160, 0.2);
+    border-color: rgba(6, 214, 160, 0.3);
+}
+
+.btn-download {
+    color: #118ab2;
+}
+
+.btn-download:hover {
+    background: rgba(17, 138, 178, 0.1);
+    box-shadow: 0 6px 15px rgba(17, 138, 178, 0.2);
+    border-color: rgba(17, 138, 178, 0.3);
+}
+
+.btn-delete {
+    color: #ef476f;
+}
+
+.btn-delete:hover {
+    background: rgba(239, 71, 111, 0.1);
+    box-shadow: 0 6px 15px rgba(239, 71, 111, 0.2);
+    border-color: rgba(239, 71, 111, 0.3);
+}
+
+.btn-view:hover, .btn-edit:hover, .btn-delete:hover, .btn-download:hover, .btn-names:hover {
+    transform: translateY(-3px) scale(1.1);
+}
+
+/* Mobile responsive styles for action buttons */
+@media (max-width: 768px) {
+    .action-btns {
+        padding: 0.3rem;
+    }
+    
+    .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+@media (max-width: 500px) {
+    .action-btns {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.3rem;
+    }
+    
+    .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
+        width: 36px;
+        height: 36px;
+        margin: 0.15rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .action-btns {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.2rem;
+    }
+    
+    .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
+        width: 34px;
+        height: 34px;
+        margin: 0.1rem;
+    }
+}
