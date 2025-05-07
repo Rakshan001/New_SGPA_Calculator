@@ -8,7 +8,6 @@ let customSubjectNames = {};
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the table with default 5 rows
-    const tableBody = document.getElementById('tableBody');
 
     // Add initial 5 rows
     for (let i = 0; i < 5; i++) {
@@ -74,38 +73,47 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('cancelEditSubjects').addEventListener('click', closeEditSubjectsModal);
     document.getElementById('saveSubjectNames').addEventListener('click', saveSubjectNamesChanges);
 
-    // Initialize AOS (Animate on Scroll) with a small delay to ensure content is visible first
-    try {
-        setTimeout(() => {
+    // Completely disable AOS on mobile devices for better performance
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (isMobile) {
+        console.log('Mobile device detected, disabling animations for better performance');
+        // Remove all AOS attributes on mobile
+        document.querySelectorAll('[data-aos]').forEach(el => {
+            el.removeAttribute('data-aos');
+            el.removeAttribute('data-aos-delay');
+            el.removeAttribute('data-aos-duration');
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+        });
+    } else {
+        // Only initialize AOS on desktop devices
+        try {
             if (typeof AOS !== 'undefined') {
                 AOS.init({
                     duration: 800,
                     easing: 'ease-in-out',
                     once: true,
                     mirror: false,
-                    disable: 'mobile' // Disable on mobile for better performance
+                    throttleDelay: 100 // Add throttling for better performance
                 });
             } else {
                 console.warn('AOS library not loaded, animations disabled');
-                // Remove AOS attributes to ensure content is visible
+                // Make content visible if AOS is not available
                 document.querySelectorAll('[data-aos]').forEach(el => {
-                    el.removeAttribute('data-aos');
-                    el.removeAttribute('data-aos-delay');
-                    el.removeAttribute('data-aos-duration');
+                    el.style.opacity = '1';
+                    el.style.transform = 'none';
                 });
             }
-        }, 100);
-    } catch (error) {
-        console.error('Error initializing AOS:', error);
+        } catch (error) {
+            console.error('Error initializing AOS:', error);
+            // Make content visible if there's an error
+            document.querySelectorAll('[data-aos]').forEach(el => {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+        }
     }
-
-    // Fallback to ensure content is visible after 1 second
-    setTimeout(() => {
-        document.querySelectorAll('[data-aos]').forEach(el => {
-            el.style.opacity = '1';
-            el.style.transform = 'none';
-        });
-    }, 1000);
 
     // Initialize new features
     initScrollProgress();

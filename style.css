@@ -45,6 +45,27 @@ body {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+    will-change: auto !important; /* Reset will-change to improve performance */
+}
+
+/* Use hardware acceleration for animations but only when needed */
+.animated-element {
+    will-change: transform, opacity;
+}
+
+/* Reduce animation complexity on mobile */
+@media (max-width: 768px) {
+    /* Disable most animations on mobile for better performance */
+    .shape, .content::before, .content::after, .result::before,
+    button::before, tr, tbody tr, .result.show p {
+        animation: none !important;
+    }
+
+    /* Simplify transitions on mobile */
+    button, .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names,
+    .content, .result, table, input, select {
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    }
 }
 
 /* Apply box-sizing to all elements for consistent padding */
@@ -103,12 +124,20 @@ h1 {
     background-clip: text;
 }
 
-/* Floating shapes background */
+/* Floating shapes background - optimized for performance */
 .shape {
     position: absolute;
-    opacity: 0.2;
+    opacity: 0.15; /* Reduced opacity */
     z-index: -1;
-    animation: floatAnimation 15s infinite ease-in-out;
+    /* Use transform3d to trigger GPU acceleration */
+    transform: translate3d(0, 0, 0);
+}
+
+/* Only animate on desktop */
+@media (min-width: 1024px) {
+    .shape {
+        animation: floatAnimation 20s infinite ease-in-out; /* Slower animation */
+    }
 }
 
 .shape-1 {
@@ -139,6 +168,13 @@ h1 {
     border-radius: 46% 54% 60% 40% / 54% 38% 62% 46%;
     background: linear-gradient(45deg, var(--accent), var(--primary));
     animation-delay: -10s;
+}
+
+/* Hide shapes on mobile for better performance */
+@media (max-width: 768px) {
+    .shape {
+        display: none;
+    }
 }
 
 /* Navbar styles */
@@ -209,51 +245,69 @@ h1 {
 
 .content {
     background: var(--card-bg);
-    backdrop-filter: blur(10px);
+    /* Remove backdrop-filter on mobile for better performance */
     border-radius: 20px;
     padding: 2.5rem 2rem;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    animation: slideUp 0.8s ease-out;
     overflow: hidden;
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border-left: 4px solid transparent;
     width: 100%;
+    /* Optimize transitions */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-left-color 0.3s ease;
 }
 
-.content:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-    border-left: 4px solid var(--accent);
+/* Only apply backdrop filter on desktop */
+@media (min-width: 1024px) {
+    .content {
+        backdrop-filter: blur(10px);
+        animation: slideUp 0.8s ease-out;
+    }
+
+    .content:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        border-left: 4px solid var(--accent);
+    }
 }
 
-.content::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: rotate(45deg);
-    animation: shimmer 3s infinite;
-    z-index: -1;
+/* Disable hover effects on mobile/tablet */
+@media (max-width: 1023px) {
+    .content {
+        border-left: 4px solid var(--accent);
+    }
 }
 
-.content::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 150px;
-    height: 150px;
-    background: radial-gradient(circle, var(--accent), transparent 70%);
-    opacity: 0.05;
-    border-radius: 50%;
-    filter: blur(40px);
-    z-index: -1;
-    animation: pulse 8s infinite alternate;
+/* Only show decorative elements on desktop */
+@media (min-width: 1024px) {
+    .content::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transform: rotate(45deg);
+        animation: shimmer 3s infinite;
+        z-index: -1;
+    }
+
+    .content::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, var(--accent), transparent 70%);
+        opacity: 0.05;
+        border-radius: 50%;
+        filter: blur(40px);
+        z-index: -1;
+        animation: pulse 8s infinite alternate;
+    }
 }
 
 table {
@@ -263,14 +317,29 @@ table {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
     border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    /* Simplify transition */
+    transition: box-shadow 0.3s ease;
 }
 
-table:hover {
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-    transform: translateY(-5px);
+/* Only apply backdrop filter and hover effects on desktop */
+@media (min-width: 1024px) {
+    table {
+        backdrop-filter: blur(10px);
+    }
+
+    table:hover {
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+    }
+
+    tr:hover {
+        background: var(--hover-bg);
+    }
+
+    tr:hover td {
+        color: var(--accent);
+    }
 }
 
 th, td {
@@ -287,20 +356,18 @@ th:last-child, td:last-child {
 }
 
 tr {
-    transition: all 0.3s ease;
     position: relative;
 }
 
-tr:hover {
-    background: var(--hover-bg);
-}
+/* Only apply transitions on desktop */
+@media (min-width: 1024px) {
+    tr {
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
 
-tr:hover td {
-    color: var(--accent);
-}
-
-tbody tr {
-    animation: fadeIn 0.5s ease-out forwards;
+    tbody tr {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
 }
 
 th {
@@ -369,7 +436,8 @@ button {
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Simplify transition for better performance */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin: 1rem 0.5rem;
     position: relative;
     overflow: hidden;
@@ -381,25 +449,36 @@ button {
     font-size: 0.9rem;
 }
 
-button::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.1) 50%,
-        rgba(255,255,255,0) 100%);
-    transform: rotate(45deg);
-    animation: shimmerEffect 3s infinite;
-    z-index: 1;
+/* Only apply shimmer effect on desktop */
+@media (min-width: 1024px) {
+    button::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,0.1) 50%,
+            rgba(255,255,255,0) 100%);
+        transform: rotate(45deg);
+        animation: shimmerEffect 3s infinite;
+        z-index: 1;
+    }
+
+    button:hover {
+        transform: translateY(-5px) scale(1.03);
+        box-shadow: 0 10px 30px rgba(76, 201, 240, 0.5);
+    }
 }
 
-button:hover {
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 10px 30px rgba(76, 201, 240, 0.5);
+/* Simpler hover effect for mobile */
+@media (max-width: 1023px) {
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(76, 201, 240, 0.4);
+    }
 }
 
 button:active {
@@ -440,18 +519,17 @@ button[type="reset"]:hover {
 .result {
     margin-top: 3rem;
     background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(76, 201, 240, 0.05));
-    backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 3rem 2rem;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25),
                 inset 0 2px 10px rgba(255, 255, 255, 0.05);
     text-align: center;
     transform: scale(0);
-    animation-fill-mode: forwards;
     overflow: hidden;
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Simplify transition for better performance */
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
 .result::after {
@@ -465,29 +543,48 @@ button[type="reset"]:hover {
     border-radius: 4px 4px 0 0;
 }
 
-.result::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, var(--accent), transparent 70%);
-    opacity: 0.1;
-    border-radius: 50%;
-    filter: blur(50px);
-    animation: pulse 8s infinite alternate;
-    z-index: -1;
+/* Only apply decorative effects on desktop */
+@media (min-width: 1024px) {
+    .result {
+        backdrop-filter: blur(10px);
+    }
+
+    .result::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, var(--accent), transparent 70%);
+        opacity: 0.1;
+        border-radius: 50%;
+        filter: blur(50px);
+        animation: pulse 8s infinite alternate;
+        z-index: -1;
+    }
+
+    .result:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+    }
 }
 
+/* Simpler animation for all devices */
 .result.show {
-    animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    transform: translateY(0);
+    animation: simplePopIn 0.5s ease forwards;
 }
 
-.result:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+/* Define a simpler animation for better performance */
+@keyframes simplePopIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* Loading bar animation for result */
