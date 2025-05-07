@@ -684,7 +684,7 @@ button[type="reset"]:hover {
     margin-right: 0.5rem;
 }
 
-.btn-save, .btn-download {
+.btn-save, .btn-download-main {
     padding: 0.9rem 1.5rem;
     border-radius: 50px;
     font-weight: 600;
