@@ -15,6 +15,25 @@ document.addEventListener('DOMContentLoaded', function() {
         addNewRow();
     }
 
+    // Check if localStorage is available and show warning if not
+    if (!isLocalStorageAvailable()) {
+        const storageWarning = document.getElementById('storageWarning');
+        if (storageWarning) {
+            storageWarning.style.display = 'block';
+        }
+
+        // Disable save button if storage is not available
+        const saveResultBtn = document.getElementById('saveResultBtn');
+        if (saveResultBtn) {
+            saveResultBtn.title = "Browser storage unavailable. Use PDF download instead.";
+            saveResultBtn.style.opacity = "0.7";
+            saveResultBtn.style.cursor = "not-allowed";
+
+            // Change the button text to indicate it's not available
+            saveResultBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Save Unavailable';
+        }
+    }
+
     // Add row button functionality
     document.getElementById('addRowBtn').addEventListener('click', function() {
         if (rowCount < MAX_ROWS) {
@@ -810,6 +829,19 @@ function closeSaveModal() {
     document.getElementById('saveNotes').value = '';
 }
 
+// Check if localStorage is available and working
+function isLocalStorageAvailable() {
+    try {
+        const testKey = '__storage_test__';
+        localStorage.setItem(testKey, testKey);
+        const result = localStorage.getItem(testKey);
+        localStorage.removeItem(testKey);
+        return result === testKey;
+    } catch (e) {
+        return false;
+    }
+}
+
 function saveResult() {
     if (!currentResults) {
         return;
@@ -823,36 +855,112 @@ function saveResult() {
         return;
     }
 
-    // Get results from localStorage
-    let results = JSON.parse(localStorage.getItem('sgpaResults') || '[]');
+    // First check if localStorage is available
+    if (!isLocalStorageAvailable()) {
+        // Show error with helpful information
+        const errorMessage =
+            "Unable to save results to browser storage. This could be due to:\n\n" +
+            "1. Your browser's privacy settings\n" +
+            "2. Private/Incognito browsing mode\n" +
+            "3. Storage quota exceeded\n\n" +
+            "Would you like to download this result as a PDF instead?";
 
-    // Create result object
-    const resultToSave = {
-        ...currentResults,
-        id: editingResultId || generateId(),
-        name: resultName,
-        notes: notes
-    };
-
-    // Check if editing or adding new
-    if (editingResultId) {
-        // Find the result and update it
-        const resultIndex = results.findIndex(r => r.id === editingResultId);
-        if (resultIndex !== -1) {
-            results[resultIndex] = resultToSave;
+        if (confirm(errorMessage)) {
+            // Offer PDF download as fallback
+            try {
+                generatePDF(currentResults);
+                closeSaveModal();
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF. Please try again.');
+            }
         }
-        editingResultId = null; // Reset editing state
-    } else {
-        // Add new result
-        results.push(resultToSave);
+        return;
     }
 
-    // Save back to localStorage
-    localStorage.setItem('sgpaResults', JSON.stringify(results));
+    try {
+        // Get results from localStorage
+        let results = [];
+        try {
+            results = JSON.parse(localStorage.getItem('sgpaResults') || '[]');
+            if (!Array.isArray(results)) {
+                console.warn('Stored results is not an array, resetting to empty array');
+                results = [];
+            }
+        } catch (parseError) {
+            console.error('Error parsing results from localStorage:', parseError);
+            results = [];
+        }
 
-    // Close modal and show success message
-    closeSaveModal();
-    alert('Result saved successfully!');
+        // Create result object
+        const resultToSave = {
+            ...currentResults,
+            id: editingResultId || generateId(),
+            name: resultName,
+            notes: notes
+        };
+
+        // Check if editing or adding new
+        if (editingResultId) {
+            // Find the result and update it
+            const resultIndex = results.findIndex(r => r.id === editingResultId);
+            if (resultIndex !== -1) {
+                results[resultIndex] = resultToSave;
+            }
+            editingResultId = null; // Reset editing state
+        } else {
+            // Add new result
+            results.push(resultToSave);
+        }
+
+        // Save back to localStorage with quota handling
+        try {
+            const resultsJson = JSON.stringify(results);
+            localStorage.setItem('sgpaResults', resultsJson);
+
+            // Verify data was saved
+            const savedData = localStorage.getItem('sgpaResults');
+            if (!savedData) {
+                throw new Error('Data not saved - storage may be disabled');
+            }
+
+            // Close modal and show success message
+            closeSaveModal();
+            alert('Result saved successfully!');
+
+        } catch (storageError) {
+            console.error('Error saving to localStorage:', storageError);
+
+            // Handle quota exceeded errors
+            if (storageError.name === 'QuotaExceededError' ||
+                storageError.toString().includes('quota') ||
+                storageError.toString().includes('storage')) {
+
+                const quotaMessage =
+                    "Storage limit reached. Would you like to:\n\n" +
+                    "1. Download this result as a PDF instead\n" +
+                    "2. Try clearing some old results first";
+
+                if (confirm(quotaMessage)) {
+                    // Offer PDF download as fallback
+                    generatePDF(currentResults);
+                    closeSaveModal();
+                } else {
+                    // Show history modal to let user delete old results
+                    closeSaveModal();
+                    showHistoryModal();
+                }
+            } else {
+                // For other errors
+                alert('Error saving result: ' + storageError.message + '\nTry downloading as PDF instead.');
+                closeSaveModal();
+            }
+        }
+    } catch (error) {
+        console.error('Error in saveResult function:', error);
+        alert('An unexpected error occurred. Please try downloading as PDF instead.');
+        closeSaveModal();
+    }
 }
 
 function showHistoryModal() {
@@ -872,10 +980,46 @@ function closeViewResultModal() {
 }
 
 function loadHistoryResults() {
-    // Get results from localStorage
-    const results = JSON.parse(localStorage.getItem('sgpaResults') || '[]');
+    // Check if localStorage is available
+    if (!isLocalStorageAvailable()) {
+        document.getElementById('noHistoryMessage').style.display = 'block';
+        document.getElementById('noHistoryMessage').innerHTML = `
+            <p>Browser storage is not available. This could be due to:</p>
+            <ul style="text-align: left; margin: 1rem auto; max-width: 80%;">
+                <li>Your browser's privacy settings</li>
+                <li>Private/Incognito browsing mode</li>
+                <li>Storage permissions denied</li>
+            </ul>
+            <p>You can still calculate SGPA and download PDFs, but saving results requires browser storage access.</p>
+        `;
+        document.getElementById('historyTable').style.display = 'none';
 
-    if (!results || results.length === 0) {
+        // Update analytics with zeros
+        document.getElementById('averageSGPA').textContent = '0.00';
+        document.getElementById('totalResults').textContent = '0';
+        document.getElementById('highestSGPA').textContent = '0.00';
+        document.getElementById('recentResults').textContent = '0';
+        return;
+    }
+
+    // Get results from localStorage with error handling
+    let results = [];
+    try {
+        const resultsData = localStorage.getItem('sgpaResults');
+        if (resultsData) {
+            results = JSON.parse(resultsData);
+            // Validate it's an array
+            if (!Array.isArray(results)) {
+                console.warn('Stored results is not an array, resetting to empty array');
+                results = [];
+            }
+        }
+    } catch (error) {
+        console.error('Error loading results from localStorage:', error);
+        results = [];
+    }
+
+    if (results.length === 0) {
         document.getElementById('noHistoryMessage').style.display = 'block';
         document.getElementById('historyTable').style.display = 'none';
 
