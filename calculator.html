@@ -11,11 +11,14 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style-action-buttons.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="index.css">
     <!-- PDF Generation Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Particles.js for Background -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <!-- AOS Library -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="main.js" defer></script>
@@ -30,18 +33,29 @@
     <!-- Scroll Progress Indicator -->
     <div class="scroll-progress" id="scrollProgress"></div>
 
-    <!-- Navbar -->
-    <nav class="navbar" id="navbar">
-        <a href="#" class="logo">SGPA<span>Calculator</span></a>
-        <div class="nav-links">
-            <a href="#" class="active">Home</a>
-            <a href="#history">History</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-        </div>
-    </nav>
+    <!-- Particles background -->
+    <div id="particles-js"></div>
 
+    <!-- Header with Responsive Navbar -->
+   <!-- Header -->
+   <header id="header">
     <div class="container">
+        <nav>
+            <div class="logo">SGPA<span>Calculator</span></div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="index.html">How It Works</a>
+                <a href="">Demo</a>
+                <!-- <a href="#testimonials">Testimonials</a> -->
+                <!-- <a href="#history">History</a> -->
+            </div>
+            <!-- <button class="cta-button" id="openModal">Get Started</button> -->
+            <div class="menu-toggle" id="menuToggle">☰</div>
+        </nav>
+    </div>
+</header>
+
+    <div class="calculator-container">
         <div class="header">
             <h1 data-aos="fade-down" data-aos-delay="100" data-aos-duration="600">SGPA Calculator</h1>
             <div class="user-actions">
@@ -307,5 +321,105 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript for Responsive Navbar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+            });
+
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Initialize particles.js if available
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    "particles": {
+                        "number": {
+                            "value": 80,
+                            "density": {
+                                "enable": true,
+                                "value_area": 800
+                            }
+                        },
+                        "color": {
+                            "value": "#4cc9f0"
+                        },
+                        "opacity": {
+                            "value": 0.3,
+                            "random": true
+                        },
+                        "size": {
+                            "value": 3,
+                            "random": true
+                        },
+                        "line_linked": {
+                            "enable": true,
+                            "distance": 150,
+                            "color": "#4361ee",
+                            "opacity": 0.2,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 1,
+                            "direction": "none",
+                            "random": true
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- Mobile Menu Styles -->
+    <script>
+        const style = document.createElement('style');
+        style.textContent = `
+            @media (max-width: 768px) {
+                .nav-links {
+                    position: fixed;
+                    top: 70px;
+                    left: 0;
+                    width: 100%;
+                    background: rgba(15, 23, 42, 0.95);
+                    backdrop-filter: blur(10px);
+                    flex-direction: column;
+                    padding: 2rem;
+                    gap: 1.5rem;
+                    transform: translateY(-150%);
+                    transition: transform 0.3s ease;
+                    z-index: 99;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                }
+
+                .nav-links.active {
+                    transform: translateY(0);
+                }
+
+                .menu-toggle {
+                    display: block;
+                }
+
+                .menu-toggle.active {
+                    color: var(--accent);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
     </body>
     </html>
