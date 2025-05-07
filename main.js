@@ -867,6 +867,10 @@ function closeHistoryModal() {
     document.getElementById('historyModal').classList.remove('show');
 }
 
+function closeViewResultModal() {
+    document.getElementById('viewResultModal').classList.remove('show');
+}
+
 function loadHistoryResults() {
     // Get results from localStorage
     const results = JSON.parse(localStorage.getItem('sgpaResults') || '[]');
@@ -2077,18 +2081,65 @@ function initThemeToggle() {
 
 function applyTheme(isDark) {
     const themeToggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
 
     if (isDark) {
-        document.documentElement.style.setProperty('--background', '#0f172a');
-        document.documentElement.style.setProperty('--text', '#ffffff');
-        document.documentElement.style.setProperty('--card-bg', 'rgba(255, 255, 255, 0.05)');
+        // Dark mode theme
+        root.style.setProperty('--background', '#0f172a');
+        root.style.setProperty('--text', '#ffffff');
+        root.style.setProperty('--card-bg', 'rgba(255, 255, 255, 0.05)');
+        root.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.1)');
+        root.style.setProperty('--input-bg', 'rgba(255, 255, 255, 0.05)');
+        root.style.setProperty('--input-text', '#ffffff');
+        root.style.setProperty('--input-placeholder', 'rgba(255, 255, 255, 0.5)');
+        root.style.setProperty('--table-header-bg', 'rgba(67, 97, 238, 0.2)');
+        root.style.setProperty('--table-border', 'rgba(255, 255, 255, 0.1)');
+        root.style.setProperty('--modal-bg', 'rgba(15, 23, 42, 0.9)');
+        root.style.setProperty('--hover-bg', 'rgba(255, 255, 255, 0.05)');
+        root.style.setProperty('--navbar-bg', 'rgba(15, 23, 42, 0.8)');
         themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        document.body.classList.remove('light-mode');
+        document.body.classList.add('dark-mode');
     } else {
-        document.documentElement.style.setProperty('--background', '#f8fafc');
-        document.documentElement.style.setProperty('--text', '#0f172a');
-        document.documentElement.style.setProperty('--card-bg', 'rgba(15, 23, 42, 0.05)');
+        // Light mode theme
+        root.style.setProperty('--background', '#f8fafc');
+        root.style.setProperty('--text', '#0f172a');
+        root.style.setProperty('--card-bg', 'rgba(15, 23, 42, 0.05)');
+        root.style.setProperty('--border-color', 'rgba(15, 23, 42, 0.1)');
+        root.style.setProperty('--input-bg', 'rgba(15, 23, 42, 0.05)');
+        root.style.setProperty('--input-text', '#0f172a');
+        root.style.setProperty('--input-placeholder', 'rgba(15, 23, 42, 0.5)');
+        root.style.setProperty('--table-header-bg', 'rgba(67, 97, 238, 0.1)');
+        root.style.setProperty('--table-border', 'rgba(15, 23, 42, 0.1)');
+        root.style.setProperty('--modal-bg', 'rgba(248, 250, 252, 0.95)');
+        root.style.setProperty('--hover-bg', 'rgba(15, 23, 42, 0.05)');
+        root.style.setProperty('--navbar-bg', 'rgba(248, 250, 252, 0.8)');
         themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        document.body.classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
     }
 }
 
+// Initialize theme based on user preference
+function initTheme() {
+    // Default to dark mode if no preference is set
+    if (localStorage.getItem('darkMode') === null) {
+        localStorage.setItem('darkMode', 'true');
+        applyTheme(true);
+    } else {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        applyTheme(isDarkMode);
+    }
+}
 
+// Initialize theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initTheme();
+
+    // Set up theme toggle button
+    document.getElementById('themeToggle').addEventListener('click', function() {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        localStorage.setItem('darkMode', (!isDarkMode).toString());
+        applyTheme(!isDarkMode);
+    });
+});

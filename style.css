@@ -1,10 +1,22 @@
 :root {
+    /* Base colors that don't change with theme */
     --primary: #4361ee;
     --secondary: #3a0ca3;
     --accent: #4cc9f0;
+
+    /* Dark theme defaults */
     --text: #ffffff;
     --background: #0f172a;
     --card-bg: rgba(255, 255, 255, 0.05);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --input-bg: rgba(255, 255, 255, 0.05);
+    --input-text: #ffffff;
+    --input-placeholder: rgba(255, 255, 255, 0.5);
+    --table-header-bg: rgba(67, 97, 238, 0.2);
+    --table-border: rgba(255, 255, 255, 0.1);
+    --modal-bg: rgba(15, 23, 42, 0.9);
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --navbar-bg: rgba(15, 23, 42, 0.8);
 }
 
 * {
@@ -135,7 +147,7 @@ h1 {
     left: 0;
     width: 100%;
     padding: 1rem 2rem;
-    background: rgba(15, 23, 42, 0.8);
+    background: var(--navbar-bg);
     backdrop-filter: blur(10px);
     z-index: 100;
     display: flex;
@@ -251,7 +263,7 @@ table {
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
     transition: all 0.3s ease;
 }
 
@@ -263,7 +275,7 @@ table:hover {
 th, td {
     padding: 1.2rem 1rem;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--table-border);
     position: relative;
     word-break: break-word;
 }
@@ -279,7 +291,7 @@ tr {
 }
 
 tr:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--hover-bg);
 }
 
 tr:hover td {
@@ -291,8 +303,8 @@ tbody tr {
 }
 
 th {
-    background: linear-gradient(45deg, rgba(67, 97, 238, 0.2), rgba(76, 201, 240, 0.1));
-    color: #fff;
+    background: var(--table-header-bg);
+    color: var(--text);
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
@@ -304,10 +316,10 @@ input[type="text"],
 select {
     width: 100%;
     padding: 0.8rem 1.2rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
     border-radius: 50px;
-    color: var(--text);
+    color: var(--input-text);
     font-size: 1rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -323,21 +335,30 @@ select:focus {
     border-color: var(--accent);
     box-shadow: 0 0 15px rgba(76, 201, 240, 0.2);
     transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--input-bg);
 }
 
 input[type="number"]::placeholder,
 input[type="text"]::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--input-placeholder);
 }
 
 select {
     appearance: none;
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1.2rem center;
     background-size: 1em;
     padding-right: 2.5rem;
+}
+
+/* Dark mode select arrow */
+.dark-mode select {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* Light mode select arrow */
+.light-mode select {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
 }
 
 button {
@@ -681,7 +702,7 @@ button[type="reset"]:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(15, 23, 42, 0.8);
+    background: var(--modal-bg);
     backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
@@ -701,7 +722,7 @@ button[type="reset"]:hover {
 }
 
 .modal {
-    background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(76, 201, 240, 0.2));
+    background: var(--card-bg);
     border-radius: 20px;
     padding: 2.5rem;
     width: 90%;
@@ -712,7 +733,7 @@ button[type="reset"]:hover {
     position: relative;
     transform: scale(0.8);
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 .modal-container.show .modal {
@@ -773,7 +794,7 @@ button[type="reset"]:hover {
 .form-group label {
     display: block;
     margin-bottom: 0.8rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text);
     font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
@@ -798,9 +819,9 @@ button[type="reset"]:hover {
     width: 100%;
     padding: 0.9rem 1.2rem;
     border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text);
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--input-text);
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -810,18 +831,17 @@ button[type="reset"]:hover {
     border-color: var(--accent);
     box-shadow: 0 0 15px rgba(76, 201, 240, 0.2);
     transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--input-bg);
 }
 
 .form-group select {
     width: 100%;
     padding: 0.9rem 1.2rem;
     border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text);
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--input-text);
     appearance: none;
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1.2rem center;
     background-size: 1em;
@@ -830,12 +850,20 @@ button[type="reset"]:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.dark-mode .form-group select {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.light-mode .form-group select {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
 .form-group select:focus {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 15px rgba(76, 201, 240, 0.2);
     transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--input-bg);
 }
 
 .form-row {
@@ -879,30 +907,31 @@ button[type="reset"]:hover {
 }
 
 .close-modal {
-    position: absolute;
-    top: 1.2rem;
-    right: 1.2rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: all 0.3s ease;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: absolute !important;
+    top: 1.2rem !important;
+    right: 1.2rem !important;
+    background: var(--input-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text) !important;
+    font-size: 1.2rem !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    transition: all 0.3s ease !important;
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    z-index: 10 !important;
 }
 
 .close-modal:hover {
-    color: var(--accent);
-    transform: rotate(90deg);
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    color: var(--accent) !important;
+    transform: rotate(90deg) !important;
+    background: var(--hover-bg) !important;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
 .tabs {
@@ -914,8 +943,8 @@ button[type="reset"]:hover {
     flex: 1;
     text-align: center;
     padding: 0.8rem;
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.7);
+    background: var(--card-bg);
+    color: var(--text);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
@@ -931,9 +960,26 @@ button[type="reset"]:hover {
     border-bottom-right-radius: 8px;
 }
 
-.tab.active {
+/* Dark mode tabs */
+.dark-mode .tab {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.dark-mode .tab.active {
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
+}
+
+/* Light mode tabs */
+.light-mode .tab {
+    background: rgba(15, 23, 42, 0.05);
+    color: rgba(15, 23, 42, 0.7);
+}
+
+.light-mode .tab.active {
+    background: rgba(15, 23, 42, 0.1);
+    color: #0f172a;
 }
 
 /* Enhanced history table styles */
@@ -943,29 +989,35 @@ button[type="reset"]:hover {
     margin-top: 1.5rem;
     border-radius: 10px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .history-table th {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: var(--table-header-bg);
+    color: var(--text);
     font-weight: 600;
     padding: 1rem 0.8rem;
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .history-table td {
     padding: 0.8rem;
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--table-border);
     position: relative;
+    vertical-align: middle;
+    color: var(--text);
+}
+
+.history-table td.action-btns {
+    min-width: 220px; /* Ensure enough space for all buttons in a row */
 }
 
 .history-table tr:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--hover-bg);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
@@ -1054,43 +1106,81 @@ button[type="reset"]:hover {
     background: rgba(111, 134, 255, 0.3);
 }
 
-.history-table .btn-view:hover {
+/* Dark mode button hover effects */
+.dark-mode .history-table .btn-view:hover {
     background: rgba(76, 161, 175, 0.7);
     transform: translateY(-3px) scale(1.1);
     box-shadow: 0 6px 15px rgba(76, 161, 175, 0.4);
     border-color: rgba(76, 161, 175, 0.5);
 }
 
-.history-table .btn-edit:hover {
+.dark-mode .history-table .btn-edit:hover {
     background: rgba(255, 209, 102, 0.7);
     transform: translateY(-3px) scale(1.1);
     box-shadow: 0 6px 15px rgba(255, 209, 102, 0.4);
     border-color: rgba(255, 209, 102, 0.5);
 }
 
-.history-table .btn-delete:hover {
+.dark-mode .history-table .btn-delete:hover {
     background: rgba(255, 107, 107, 0.7);
     transform: translateY(-3px) scale(1.1);
     box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
     border-color: rgba(255, 107, 107, 0.5);
 }
 
-.history-table .btn-download:hover {
+.dark-mode .history-table .btn-download:hover {
     background: rgba(56, 239, 125, 0.7);
     transform: translateY(-3px) scale(1.1);
     box-shadow: 0 6px 15px rgba(56, 239, 125, 0.4);
     border-color: rgba(56, 239, 125, 0.5);
 }
 
-.history-table .btn-names:hover {
+.dark-mode .history-table .btn-names:hover {
     background: rgba(111, 134, 255, 0.7);
     transform: translateY(-3px) scale(1.1);
     box-shadow: 0 6px 15px rgba(111, 134, 255, 0.4);
     border-color: rgba(111, 134, 255, 0.5);
 }
 
+/* Light mode button hover effects */
+.light-mode .history-table .btn-view:hover {
+    background: rgba(8, 145, 178, 0.2);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 15px rgba(8, 145, 178, 0.2);
+    border-color: rgba(8, 145, 178, 0.3);
+}
+
+.light-mode .history-table .btn-edit:hover {
+    background: rgba(202, 138, 4, 0.2);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 15px rgba(202, 138, 4, 0.2);
+    border-color: rgba(202, 138, 4, 0.3);
+}
+
+.light-mode .history-table .btn-delete:hover {
+    background: rgba(190, 18, 60, 0.2);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 15px rgba(190, 18, 60, 0.2);
+    border-color: rgba(190, 18, 60, 0.3);
+}
+
+.light-mode .history-table .btn-download:hover {
+    background: rgba(5, 150, 105, 0.2);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 15px rgba(5, 150, 105, 0.2);
+    border-color: rgba(5, 150, 105, 0.3);
+}
+
+.light-mode .history-table .btn-names:hover {
+    background: rgba(3, 105, 161, 0.2);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 15px rgba(3, 105, 161, 0.2);
+    border-color: rgba(3, 105, 161, 0.3);
+}
+
 /* Fix for result visibility - important to fix the masking issue */
-.result p, .result-summary .summary-item {
+.dark-mode .result p,
+.dark-mode .result-summary .summary-item {
     background: linear-gradient(to right, #06beb6, #48b1bf);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1100,9 +1190,30 @@ button[type="reset"]:hover {
     z-index: 5;
 }
 
-.result.show p {
+.dark-mode .result.show p {
     animation: none !important; /* Remove any animation that might be causing problems */
     background: linear-gradient(to right, #06beb6, #48b1bf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Light mode result text */
+.light-mode .result p,
+.light-mode .result-summary .summary-item {
+    background: linear-gradient(to right, #0f172a, #1e293b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none !important;
+    position: relative;
+    z-index: 5;
+    font-weight: 600;
+}
+
+.light-mode .result.show p {
+    animation: none !important;
+    background: linear-gradient(to right, #0f172a, #1e293b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1114,11 +1225,11 @@ button[type="reset"]:hover {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     margin-bottom: 1.5rem;
-    color: rgba(255, 255, 255, 0.9);
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    background: var(--card-bg);
     padding: 1rem;
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 .result-detail-header div {
@@ -1131,27 +1242,28 @@ button[type="reset"]:hover {
     align-items: center;
     gap: 0.8rem;
     margin: 1.5rem 0;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .result-summary .summary-item {
     font-size: 1.4rem;
-    color: #fff;
-    background: linear-gradient(to right, #06beb6, #48b1bf);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     font-weight: 600;
 }
 
-.result-summary .summary-item strong {
+.dark-mode .result-summary .summary-item strong {
     margin-right: 0.8rem;
     color: white;
     -webkit-text-fill-color: white;
+}
+
+.light-mode .result-summary .summary-item strong {
+    margin-right: 0.8rem;
+    color: #0f172a;
+    -webkit-text-fill-color: #0f172a;
 }
 
 .detail-actions {

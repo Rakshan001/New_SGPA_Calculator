@@ -3,13 +3,12 @@
     display: flex;
     gap: 0.5rem;
     justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: row;
+    flex-wrap: nowrap;
     padding: 0.5rem;
 }
 
 .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -25,54 +24,128 @@
     backdrop-filter: blur(5px);
 }
 
-.btn-view {
+/* Dark mode buttons */
+.dark-mode .btn-view,
+.dark-mode .btn-edit,
+.dark-mode .btn-delete,
+.dark-mode .btn-download,
+.dark-mode .btn-names {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Light mode buttons */
+.light-mode .btn-view,
+.light-mode .btn-edit,
+.light-mode .btn-delete,
+.light-mode .btn-download,
+.light-mode .btn-names {
+    background: rgba(15, 23, 42, 0.05);
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    color: #0f172a;
+}
+
+/* Dark mode button colors */
+.dark-mode .btn-view {
     color: #4cc9f0;
 }
 
-.btn-view:hover {
+.dark-mode .btn-view:hover {
     background: rgba(76, 201, 240, 0.1);
     box-shadow: 0 6px 15px rgba(76, 201, 240, 0.2);
     border-color: rgba(76, 201, 240, 0.3);
 }
 
-.btn-edit {
+.dark-mode .btn-edit {
     color: #ffd166;
 }
 
-.btn-edit:hover {
+.dark-mode .btn-edit:hover {
     background: rgba(255, 209, 102, 0.1);
     box-shadow: 0 6px 15px rgba(255, 209, 102, 0.2);
     border-color: rgba(255, 209, 102, 0.3);
 }
 
-.btn-names {
+.dark-mode .btn-names {
     color: #06d6a0;
 }
 
-.btn-names:hover {
+.dark-mode .btn-names:hover {
     background: rgba(6, 214, 160, 0.1);
     box-shadow: 0 6px 15px rgba(6, 214, 160, 0.2);
     border-color: rgba(6, 214, 160, 0.3);
 }
 
-.btn-download {
+.dark-mode .btn-download {
     color: #118ab2;
 }
 
-.btn-download:hover {
+.dark-mode .btn-download:hover {
     background: rgba(17, 138, 178, 0.1);
     box-shadow: 0 6px 15px rgba(17, 138, 178, 0.2);
     border-color: rgba(17, 138, 178, 0.3);
 }
 
-.btn-delete {
+.dark-mode .btn-delete {
     color: #ef476f;
 }
 
-.btn-delete:hover {
+.dark-mode .btn-delete:hover {
     background: rgba(239, 71, 111, 0.1);
     box-shadow: 0 6px 15px rgba(239, 71, 111, 0.2);
     border-color: rgba(239, 71, 111, 0.3);
+}
+
+/* Light mode button colors */
+.light-mode .btn-view {
+    color: #0891b2;
+}
+
+.light-mode .btn-view:hover {
+    background: rgba(8, 145, 178, 0.1);
+    box-shadow: 0 6px 15px rgba(8, 145, 178, 0.2);
+    border-color: rgba(8, 145, 178, 0.3);
+}
+
+.light-mode .btn-edit {
+    color: #ca8a04;
+}
+
+.light-mode .btn-edit:hover {
+    background: rgba(202, 138, 4, 0.1);
+    box-shadow: 0 6px 15px rgba(202, 138, 4, 0.2);
+    border-color: rgba(202, 138, 4, 0.3);
+}
+
+.light-mode .btn-names {
+    color: #059669;
+}
+
+.light-mode .btn-names:hover {
+    background: rgba(5, 150, 105, 0.1);
+    box-shadow: 0 6px 15px rgba(5, 150, 105, 0.2);
+    border-color: rgba(5, 150, 105, 0.3);
+}
+
+.light-mode .btn-download {
+    color: #0369a1;
+}
+
+.light-mode .btn-download:hover {
+    background: rgba(3, 105, 161, 0.1);
+    box-shadow: 0 6px 15px rgba(3, 105, 161, 0.2);
+    border-color: rgba(3, 105, 161, 0.3);
+}
+
+.light-mode .btn-delete {
+    color: #be123c;
+}
+
+.light-mode .btn-delete:hover {
+    background: rgba(190, 18, 60, 0.1);
+    box-shadow: 0 6px 15px rgba(190, 18, 60, 0.2);
+    border-color: rgba(190, 18, 60, 0.3);
 }
 
 .btn-view:hover, .btn-edit:hover, .btn-delete:hover, .btn-download:hover, .btn-names:hover {
@@ -84,7 +157,7 @@
     .action-btns {
         padding: 0.3rem;
     }
-    
+
     .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
         width: 38px;
         height: 38px;
@@ -97,7 +170,7 @@
         justify-content: center;
         gap: 0.3rem;
     }
-    
+
     .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
         width: 36px;
         height: 36px;
@@ -111,7 +184,7 @@
         flex-wrap: wrap;
         gap: 0.2rem;
     }
-    
+
     .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
         width: 34px;
         height: 34px;
