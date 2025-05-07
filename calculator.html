@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGPA Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style-action-buttons.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="main.js" defer></script>
+    <script src="pdf-generator.js" defer></script>
+</head>
+<body>
+    <!-- Background Shapes -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="logo">SGPA<span>Calculator</span></a>
+        <div class="nav-links">
+            <a href="#" class="active">Home</a>
+            <a href="#history">History</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1 data-aos="fade-down" data-aos-delay="100" data-aos-duration="600">SGPA Calculator</h1>
+            <div class="user-actions">
+                <button type="button" id="historyBtn" class="btn-history" data-aos="fade-left" data-aos-delay="200" data-aos-duration="600">
+                    <i class="fas fa-history"></i> History
+                </button>
+            </div>
+        </div>
+
+        <div class="content" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">
+            <form id="sgpaForm" class="formdata">
+                <div class="student-info" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="studentName">Name</label>
+                            <input type="text" id="studentName" placeholder="Enter your name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="usn">USN</label>
+                            <input type="text" id="usn" placeholder="Enter your USN">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="semester">Semester</label>
+                            <select id="semester">
+                                <option value="">Select Semester</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gradYear">Graduation Year (Optional)</label>
+                            <input type="number" id="gradYear" placeholder="Enter graduation year" min="2000" max="2100">
+                        </div>
+                    </div>
+                </div>
+
+                <table id="subjectsTable" data-aos="fade-up" data-aos-delay="250" data-aos-duration="600">
+                    <thead>
+                        <tr>
+                            <th>SUBJECTS</th>
+                            <th>CREDITS</th>
+                            <th>MARKS</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Initial rows will be added by JavaScript -->
+                    </tbody>
+                </table>
+
+                <div class="add-row-container" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
+                    <button type="button" id="addRowBtn" class="add-row-btn">
+                        <i class="fas fa-plus-circle"></i> ADD SUBJECT
+                    </button>
+                    <div class="row-counter">Subjects: <span id="rowCount">5</span></div>
+                </div>
+
+                <div class="button-group" data-aos="fade-up" data-aos-delay="350" data-aos-duration="600">
+                    <button type="reset" id="reset">RESET</button>
+                    <button type="button" id="calculate" onclick="calculate_SGPA()">CALCULATE SGPA</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="result" id="resultContainer">
+            <h1>RESULT</h1>
+            <div id="gradeDisplay" class="grade grade-b">B Grade</div>
+            <p id="result">Your SGPA will appear here</p>
+            <h1>PERCENTAGE</h1>
+            <p id="percentage">Your percentage will appear here</p>
+
+            <div class="result-actions">
+                <button type="button" id="saveResultBtn" class="btn-save">
+                    <i class="fas fa-save"></i> Save Result
+                </button>
+                <button type="button" id="downloadResultBtn" class="btn-download">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+
+        <!-- Back to Top Button -->
+        <button id="back-to-top" aria-label="Back to top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+
+
+    <!-- Save Result Modal -->
+    <div class="modal-container" id="saveModal">
+        <div class="modal">
+            <button type="button" class="close-modal" id="closeSaveModal" onclick="closeSaveModal()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h2>Save Your Result</h2>
+            <p>Please name your result to save it for future reference:</p>
+
+            <div id="saveFormContent">
+                <div class="form-group">
+                    <label for="resultName">Result Name</label>
+                    <input type="text" id="resultName" placeholder="E.g., Semester 5 Results">
+                </div>
+                <div class="form-group">
+                    <label for="saveNotes">Notes (Optional)</label>
+                    <input type="text" id="saveNotes" placeholder="Any notes about this result">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-close" id="cancelSave">Cancel</button>
+                    <button type="button" class="btn-primary" id="confirmSave">Save Result</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal-container" id="historyModal">
+        <div class="modal">
+            <button type="button" class="close-modal" id="closeHistoryModal" onclick="closeHistoryModal()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h2>Your Result History</h2>
+
+            <div id="historyContent">
+                <div class="analytics-section">
+                    <h3>Analytics Overview</h3>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="analytics-value" id="averageSGPA">0.00</div>
+                            <div class="analytics-label">Average SGPA</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-value" id="totalResults">0</div>
+                            <div class="analytics-label">Total Results</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-value" id="highestSGPA">0.00</div>
+                            <div class="analytics-label">Highest SGPA</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-value" id="recentResults">0</div>
+                            <div class="analytics-label">Recent (30 days)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="history-actions">
+                    <button type="button" id="downloadAllBtn" class="btn-download-all">
+                        <i class="fas fa-file-download"></i> Download All PDFs
+                    </button>
+                    <button type="button" id="editSubjectsHistoryBtn" class="btn-edit-subjects">
+                        <i class="fas fa-edit"></i> Edit Subject Names
+                    </button>
+                </div>
+
+                <div id="noHistoryMessage" class="no-records">
+                    <p>No saved results found. Calculate and save results to see them here.</p>
+                </div>
+
+                <table id="historyTable" class="history-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name/USN</th>
+                            <th>Semester</th>
+                            <th>SGPA</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- History entries will be added here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Result Details Modal -->
+    <div class="modal-container" id="viewResultModal">
+        <div class="modal">
+            <button type="button" class="close-modal" id="closeViewResultModal" onclick="closeViewResultModal()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h2>Result Details</h2>
+            <div class="result-detail-header">
+                <div><strong>Name:</strong> <span id="detailName">-</span></div>
+                <div><strong>USN:</strong> <span id="detailUSN">-</span></div>
+                <div><strong>Semester:</strong> <span id="detailSemester">-</span></div>
+                <div><strong>Date:</strong> <span id="detailDate">-</span></div>
+            </div>
+
+            <div class="result-summary">
+                <div class="grade" id="detailGrade">A Grade</div>
+                <div class="summary-item"><strong>SGPA:</strong> <span id="detailSGPA">9.5</span></div>
+                <div class="summary-item"><strong>Percentage:</strong> <span id="detailPercentage">85.5%</span></div>
+            </div>
+
+            <table id="detailTable" class="history-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                        <th>Marks</th>
+                        <th>Grade Points</th>
+                    </tr>
+                </thead>
+                <tbody id="detailTableBody">
+                    <!-- Subject details will be added here by JavaScript -->
+                </tbody>
+            </table>
+
+            <div class="detail-actions">
+                <button type="button" class="btn-close" id="closeDetailView">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn-edit-detail" id="editDetailResult">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button type="button" class="btn-edit-names" id="editDetailSubjects">
+                    <i class="fas fa-font"></i> Edit Names
+                </button>
+                <button type="button" class="btn-download-detail" id="downloadDetail">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Subject Names Modal -->
+    <div class="modal-container" id="editSubjectsModal">
+        <div class="modal">
+            <button type="button" class="close-modal" id="closeEditSubjectsModal" onclick="closeEditSubjectsModal()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h2>Edit Subject Names</h2>
+            <div id="subjectNamesList">
+                <!-- Subject name editing fields will be added here by JavaScript -->
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-close" id="cancelEditSubjects">Cancel</button>
+                <button type="button" class="btn-primary" id="saveSubjectNames">Save Changes</button>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
