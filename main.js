@@ -938,23 +938,25 @@ function loadHistoryResults() {
                 <td data-label="Date">${formattedDate}</td>
                 <td data-label="Name/USN">${nameUsn}</td>
                 <td data-label="Semester">${semesterDisplay}</td>
-                <td data-label="SGPA"><span class="${sgpaClass}">${result.sgpa}</span></td>
+                <td data-label="SGPA" class="sgpa-cell"><span class="${sgpaClass}">${result.sgpa}</span></td>
                 <td data-label="Actions" class="action-btns">
-                    <button type="button" class="btn-view" onclick="viewResultDetail('${result.id}')" title="View Details">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button type="button" class="btn-edit" onclick="editResult('${result.id}')" title="Edit Result">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button type="button" class="btn-names" onclick="editResultSubjects('${result.id}')" title="Edit Subject Names">
-                        <i class="fas fa-font"></i>
-                    </button>
-                    <button type="button" class="btn-download" onclick="downloadSingleResult('${result.id}')" title="Download PDF">
-                        <i class="fas fa-file-download"></i>
-                    </button>
-                    <button type="button" class="btn-delete" onclick="deleteResult('${result.id}')" title="Delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <div class="action-buttons-container">
+                        <button type="button" class="btn-view" onclick="viewResultDetail('${result.id}')" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button type="button" class="btn-edit" onclick="editResult('${result.id}')" title="Edit Result">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn-names" onclick="editResultSubjects('${result.id}')" title="Edit Subject Names">
+                            <i class="fas fa-font"></i>
+                        </button>
+                        <button type="button" class="btn-download" onclick="downloadSingleResult('${result.id}')" title="Download PDF">
+                            <i class="fas fa-file-download"></i>
+                        </button>
+                        <button type="button" class="btn-delete" onclick="deleteResult('${result.id}')" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </td>
             `;
 

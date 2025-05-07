@@ -707,13 +707,15 @@ button[type="reset"]:hover {
     backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
     padding: 1rem;
     overflow-y: auto;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
 }
 
 .modal-container.show {
@@ -726,8 +728,8 @@ button[type="reset"]:hover {
     background: var(--card-bg);
     border-radius: 20px;
     padding: 2.5rem;
-    width: 90%;
-    max-width: 550px;
+    width: 95%;
+    max-width: 850px;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
@@ -735,6 +737,22 @@ button[type="reset"]:hover {
     transform: scale(0.8);
     transition: all 0.3s ease;
     border: 1px solid var(--border-color);
+    margin: auto;
+}
+
+@media (max-width: 768px) {
+    .modal {
+        padding: 2rem 1.5rem;
+        width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal {
+        padding: 1.5rem 1rem;
+        width: 95%;
+        border-radius: 15px;
+    }
 }
 
 .modal-container.show .modal {
@@ -1352,16 +1370,31 @@ button[type="reset"]:hover {
     #historyContent {
         overflow-x: auto;
         padding-bottom: 1rem;
+        -webkit-overflow-scrolling: touch;
     }
 
     .history-table {
         min-width: 650px;
+        width: 100%;
     }
 
     /* Improve analytics section */
     .analytics-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
+    }
+
+    .analytics-section h3 {
+        text-align: center;
+        margin-bottom: 1.2rem;
+    }
+
+    .analytics-card {
+        padding: 1rem;
+    }
+
+    .analytics-value {
+        font-size: 1.6rem;
     }
 }
 
@@ -2402,19 +2435,21 @@ button[type="reset"]:hover {
 .history-actions {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
 }
 
 .btn-download-all, .btn-edit-subjects {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.6rem 1rem;
+    padding: 0.8rem 1.2rem;
     border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    flex: 1;
 }
 
 .btn-download-all {
@@ -2424,19 +2459,31 @@ button[type="reset"]:hover {
 }
 
 .btn-download-all:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(54, 209, 220, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(54, 209, 220, 0.5);
 }
 
 .btn-edit-subjects {
-    background: rgba(255, 209, 102, 0.2);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(255, 209, 102, 0.1);
+    background: linear-gradient(to right, #8b5cf6, #6366f1);
+    color: white;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
 }
 
 .btn-edit-subjects:hover {
-    background: rgba(255, 209, 102, 0.3);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+@media (max-width: 768px) {
+    .history-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .btn-download-all, .btn-edit-subjects {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
 }
 
 @media (max-width: 500px) {
@@ -2464,7 +2511,18 @@ button[type="reset"]:hover {
 }
 
 /* Responsive table for very small screens */
-@media (max-width: 400px) {
+@media (max-width: 500px) {
+    /* Convert table to cards on very small screens */
+    #historyContent {
+        overflow-x: visible;
+    }
+
+    .history-table {
+        min-width: auto;
+        border-collapse: separate;
+        border-spacing: 0 1rem;
+    }
+
     .history-table thead {
         display: none;
     }
@@ -2475,28 +2533,30 @@ button[type="reset"]:hover {
     .history-table td {
         display: block;
         width: 100%;
-        text-align: right;
     }
 
     .history-table tr {
-        margin-bottom: 1rem;
-        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        border-radius: 12px;
         overflow: hidden;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
     }
 
     .history-table td {
-        padding: 0.8rem 1rem;
+        padding: 1rem;
         position: relative;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid var(--border-color);
+        text-align: right;
     }
 
     .history-table td:last-child {
         border-bottom: none;
     }
 
+    /* Add data labels for each cell */
     .history-table td::before {
         content: attr(data-label);
         position: absolute;
@@ -2505,17 +2565,60 @@ button[type="reset"]:hover {
         white-space: nowrap;
         font-weight: 600;
         text-align: left;
-        color: rgba(255, 255, 255, 0.7);
+        color: var(--text);
+        opacity: 0.7;
     }
 
+    /* Special styling for SGPA cell */
+    .history-table td.sgpa-cell {
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 1.2rem 1rem;
+    }
+
+    /* Special styling for action buttons cell */
     .history-table td.action-btns {
         display: flex;
-        justify-content: flex-end;
-        padding: 1rem;
+        justify-content: center;
+        padding: 1.2rem 0.5rem 1rem;
+        text-align: center;
     }
 
     .history-table td.action-btns::before {
-        top: 1.5rem;
+        top: 0.3rem;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Further optimizations for very small screens */
+@media (max-width: 400px) {
+    .history-table tr {
+        margin-bottom: 2rem;
+    }
+
+    .history-table td {
+        padding: 1.2rem 1rem;
+    }
+
+    .history-table td::before {
+        position: relative;
+        display: block;
+        left: 0;
+        width: 100%;
+        margin-bottom: 0.5rem;
+        text-align: left;
+        font-weight: 700;
+        color: var(--text);
+        opacity: 0.8;
+    }
+
+    .history-table td {
+        text-align: center;
+    }
+
+    .history-table td.action-btns {
+        padding: 1.5rem 0.5rem 1rem;
     }
 }
 

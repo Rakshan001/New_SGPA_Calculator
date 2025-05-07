@@ -299,10 +299,23 @@
     transform: translateY(-3px) scale(1.1);
 }
 
+/* Action buttons container for better organization */
+.action-buttons-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 /* Mobile responsive styles for action buttons */
 @media (max-width: 768px) {
     .action-btns {
-        padding: 0.3rem;
+        padding: 0.5rem;
+        justify-content: center;
+    }
+
+    .action-buttons-container {
+        justify-content: center;
     }
 
     .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
@@ -316,6 +329,14 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: 0.3rem;
+        padding: 0.8rem 0.3rem 0.3rem;
+    }
+
+    .action-buttons-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.3rem;
+        width: 100%;
     }
 
     .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
@@ -325,11 +346,19 @@
     }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 400px) {
     .action-btns {
         flex-direction: row;
         flex-wrap: wrap;
         gap: 0.2rem;
+        padding: 1rem 0.3rem 0.3rem;
+    }
+
+    .action-buttons-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.3rem;
+        width: 100%;
     }
 
     .btn-view, .btn-edit, .btn-delete, .btn-download, .btn-names {
