@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="style-action-buttons.css">
+    <link rel="stylesheet" href="result-buttons.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="index.css">
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Particles.js for Background -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="cgpa.js" defer></script>
+    <style>
+        /* CGPA Calculator specific styles */
+        .semester-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .semester-label {
+            width: 120px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .semester-field {
+            flex: 1;
+        }
+
+        .sgpa-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .sgpa-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.3);
+        }
+
+        .sgpa-input.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+        }
+
+        .semester-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .semester-count {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .semester-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-add-semester, .btn-remove-semester {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-semester {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-add-semester:hover {
+            background: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .btn-remove-semester {
+            background: #f87171;
+            color: white;
+        }
+
+        .btn-remove-semester:hover {
+            background: #ef4444;
+            transform: translateY(-2px);
+        }
+
+        .btn-remove-semester:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .cgpa-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .cgpa-result {
+            display: none;
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cgpa-container.show-result .cgpa-result {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Shapes -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Particles background -->
+    <div id="particles-js"></div>
+
+    <!-- Header with Responsive Navbar -->
+       <!-- Header -->
+   <header id="header">
+    <div class="container">
+        <nav>
+            <div class="logo">CGPA<span>Calculator</span></div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="calculator.html">SGPA Calculator</a>
+                <a href="cgpa.html" class="active">CGPA Calculator</a>
+            </div>
+            <!-- <button class="cta-button" id="openModal">Get Started</button> -->
+            <div class="menu-toggle" id="menuToggle">☰</div>
+        </nav>
+    </div>
+</header>
+    <div class="cgpa-container" id="cgpaContainer">
+        <div class="header">
+            <h1 data-aos="fade-down" data-aos-delay="100" data-aos-duration="600">CGPA Calculator</h1>
+            <p class="subtitle" data-aos="fade-down" data-aos-delay="150" data-aos-duration="600">
+                Calculate your Cumulative Grade Point Average (CGPA) by entering your semester SGPAs
+            </p>
+        </div>
+
+        <div class="content" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">
+            <form id="cgpaForm">
+                <div class="semester-controls">
+                    <div class="semester-count">
+                        Semesters: <span id="semesterCount">4</span>
+                    </div>
+                    <div class="semester-buttons">
+                        <button type="button" id="removeSemester" class="btn-remove-semester">
+                            <i class="fas fa-minus"></i> Remove Semester
+                        </button>
+                        <button type="button" id="addSemester" class="btn-add-semester">
+                            <i class="fas fa-plus"></i> Add Semester
+                        </button>
+                    </div>
+                </div>
+
+                <div id="semesterInputs">
+                    <!-- Semester inputs will be added here by JavaScript -->
+                </div>
+
+                <div class="button-group" data-aos="fade-up" data-aos-delay="350" data-aos-duration="600">
+                    <button type="reset" id="reset">RESET</button>
+                    <button type="button" id="calculateCGPA">CALCULATE CGPA</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="cgpa-result" id="cgpaResultContainer">
+            <h1>RESULT</h1>
+            <div id="cgpaGradeDisplay" class="grade">Grade</div>
+            <p id="cgpaResult">Your CGPA will appear here</p>
+            <h1>PERCENTAGE</h1>
+            <p id="cgpaPercentage">Your percentage will appear here</p>
+
+            <div class="result-actions">
+                <button type="button" id="saveCGPABtn" class="btn-save" onclick="saveCGPAResult()">
+                    <i class="fas fa-save"></i> Save Result
+                </button>
+                <button type="button" id="downloadCGPABtn" class="btn-download-main">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Back to Top Button -->
+        <button id="back-to-top" aria-label="Back to top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- JavaScript for Responsive Navbar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+            });
+
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Initialize particles.js if available with optimized settings for better performance
+            if (typeof particlesJS !== 'undefined') {
+                // Check if we're on a mobile device
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+                particlesJS('particles-js', {
+                    "particles": {
+                        "number": {
+                            // Reduce particle count on mobile
+                            "value": isMobile ? 20 : 40,
+                            "density": {
+                                "enable": true,
+                                "value_area": 800
+                            }
+                        },
+                        "color": {
+                            "value": "#4cc9f0"
+                        },
+                        "opacity": {
+                            "value": 0.2,
+                            "random": false // Disable random opacity for better performance
+                        },
+                        "size": {
+                            "value": isMobile ? 2 : 3,
+                            "random": false // Disable random size for better performance
+                        },
+                        "line_linked": {
+                            "enable": !isMobile, // Disable lines on mobile
+                            "distance": 150,
+                            "color": "#4361ee",
+                            "opacity": 0.1,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 0.5, // Slower movement for better performance
+                            "direction": "none",
+                            "random": false, // Disable random movement for better performance
+                            "straight": false,
+                            "out_mode": "out",
+                            "bounce": false,
+                            "attract": {
+                                "enable": false
+                            }
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": false // Disable hover effects for better performance
+                            },
+                            "onclick": {
+                                "enable": false // Disable click effects for better performance
+                            },
+                            "resize": true
+                        }
+                    },
+                    "retina_detect": false // Disable retina detection for better performance
+                });
+            }
+
+            // Initialize AOS
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out',
+                    once: true,
+                    mirror: false,
+                    disable: 'mobile' // Disable on mobile for better performance
+                });
+            }
+
+            // Back to top button
+            const backToTop = document.getElementById('back-to-top');
+            if (backToTop) {
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 300) {
+                        backToTop.classList.add('visible');
+                    } else {
+                        backToTop.classList.remove('visible');
+                    }
+                });
+
+                backToTop.addEventListener('click', function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const icon = themeToggle.querySelector('i');
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                body.classList.add(savedTheme);
+                if (savedTheme === 'light-mode') {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
+            } else {
+                // Default to dark mode
+                body.classList.add('dark-mode');
+            }
+
+            themeToggle.addEventListener('click', function() {
+                if (body.classList.contains('dark-mode')) {
+                    body.classList.remove('dark-mode');
+                    body.classList.add('light-mode');
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'light-mode');
+                } else {
+                    body.classList.remove('light-mode');
+                    body.classList.add('dark-mode');
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'dark-mode');
+                }
+            });
+        });
+    </script>
+
+    <!-- Mobile Menu Styles -->
+    <script>
+        const style = document.createElement('style');
+        style.textContent = `
+            @media (max-width: 768px) {
+                .nav-links {
+                    position: fixed;
+                    top: 70px;
+                    left: 0;
+                    width: 100%;
+                    background: rgba(15, 23, 42, 0.95);
+                    backdrop-filter: blur(10px);
+                    flex-direction: column;
+                    padding: 2rem;
+                    gap: 1.5rem;
+                    transform: translateY(-150%);
+                    transition: transform 0.3s ease;
+                    z-index: 99;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                }
+
+                .nav-links.active {
+                    transform: translateY(0);
+                }
+
+                .menu-toggle {
+                    display: block;
+                }
+
+                .menu-toggle.active {
+                    color: var(--accent);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+    <!-- Performance optimization script -->
+    <script>
+        // Detect device performance capabilities
+        const performanceOptimizer = {
+            init: function() {
+                // Check if device is low-end
+                const isLowEndDevice = this.isLowEndDevice();
+
+                if (isLowEndDevice) {
+                    console.log('Low-end device detected, applying performance optimizations');
+                    this.applyLowEndOptimizations();
+                }
+
+                // Apply general optimizations
+                this.applyGeneralOptimizations();
+            },
+
+            isLowEndDevice: function() {
+                // Check for low memory (less than 4GB)
+                const lowMemory = navigator.deviceMemory && navigator.deviceMemory < 4;
+
+                // Check for slow CPU (less than 4 logical cores)
+                const slowCPU = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+
+                // Check if it's a mobile device
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+                return lowMemory || slowCPU || isMobile;
+            },
+
+            applyLowEndOptimizations: function() {
+                // Remove all backdrop-filter effects (very expensive on low-end devices)
+                document.documentElement.style.setProperty('--backdrop-filter', 'none');
+
+                // Disable all animations
+                const style = document.createElement('style');
+                style.textContent = `
+                    * {
+                        animation: none !important;
+                        transition: none !important;
+                    }
+
+                    .shape, .content::before, .content::after,
+                    .result::before, .result::after, button::before {
+                        display: none !important;
+                    }
+                `;
+                document.head.appendChild(style);
+
+                // Remove particles.js if it exists
+                const particlesContainer = document.getElementById('particles-js');
+                if (particlesContainer) {
+                    particlesContainer.style.display = 'none';
+                }
+            },
+
+            applyGeneralOptimizations: function() {
+                // Optimize event listeners by using passive listeners where possible
+                const originalAddEventListener = EventTarget.prototype.addEventListener;
+                EventTarget.prototype.addEventListener = function(type, listener, options) {
+                    const passiveEvents = ['touchstart', 'touchmove', 'wheel', 'mousewheel'];
+
+                    if (passiveEvents.includes(type)) {
+                        const newOptions = options || {};
+                        if (typeof newOptions === 'object') {
+                            newOptions.passive = true;
+                        } else {
+                            options = { passive: true };
+                        }
+                    }
+
+                    return originalAddEventListener.call(this, type, listener, options);
+                };
+
+                // Optimize scrolling
+                let scrollTimeout;
+                window.addEventListener('scroll', function() {
+                    // Disable animations during scroll
+                    document.body.classList.add('disable-animations');
+
+                    // Re-enable animations after scrolling stops
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(function() {
+                        document.body.classList.remove('disable-animations');
+                    }, 150);
+                }, { passive: true });
+            }
+        };
+
+        // Initialize performance optimizations
+        document.addEventListener('DOMContentLoaded', function() {
+            performanceOptimizer.init();
+        });
+    </script>
+</body>
+</html>
