@@ -557,7 +557,7 @@ button[type="reset"]:hover {
         width: 200px;
         height: 200px;
         background: radial-gradient(circle, var(--accent), transparent 70%);
-        opacity: 0.1;
+        opacity: 1;
         border-radius: 50%;
         filter: blur(50px);
         animation: pulse 8s infinite alternate;
