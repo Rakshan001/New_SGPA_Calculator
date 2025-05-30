@@ -2106,196 +2106,68 @@ button[type="reset"]:hover {
     }
 }
 
-/* Responsive table for very small screens */
-@media (max-width: 500px) {
-    /* Convert table to cards on very small screens */
-    #historyContent {
-        overflow-x: visible;
-    }
-
-    .history-table {
-        min-width: auto;
-        border-collapse: separate;
-        border-spacing: 0 1rem;
-    }
-
-    .history-table thead {
-        display: none;
-    }
-
-    .history-table,
-    .history-table tbody,
-    .history-table tr,
-    .history-table td {
+/* Table responsiveness */
+@media (max-width: 768px) {
+    table {
         display: block;
-        width: 100%;
-    }
-
-    .history-table tr {
-        margin-bottom: 1.5rem;
-        border-radius: 12px;
-        overflow: hidden;
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        position: relative;
-    }
-
-    .history-table td {
-        padding: 1rem;
-        position: relative;
-        border-bottom: 1px solid var(--border-color);
-        text-align: right;
-    }
-
-    .history-table td:last-child {
-        border-bottom: none;
-    }
-
-    /* Add data labels for each cell */
-    .history-table td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 1rem;
-        width: 45%;
+        overflow-x: auto;
         white-space: nowrap;
-        font-weight: 600;
-        text-align: left;
-        color: var(--text);
-        opacity: 0.7;
-    }
-
-    /* Special styling for SGPA cell */
-    .history-table td.sgpa-cell {
-        font-size: 1.1rem;
-        font-weight: 600;
-        padding: 1.2rem 1rem;
-    }
-
-    /* Special styling for action buttons cell */
-    .history-table td.action-btns {
-        display: flex;
-        justify-content: center;
-        padding: 1.2rem 0.5rem 1rem;
-        text-align: center;
-    }
-
-    .history-table td.action-btns::before {
-        top: 0.3rem;
+        -webkit-overflow-scrolling: touch;
         width: 100%;
-        text-align: center;
-    }
-}
-
-/* Further optimizations for very small screens */
-@media (max-width: 400px) {
-    .history-table tr {
-        margin-bottom: 2rem;
     }
 
-    .history-table td {
-        padding: 1.2rem 1rem;
+    th, td {
+        padding: 0.8rem 1rem;
+        min-width: 120px;
     }
 
-    .history-table td::before {
-        position: relative;
-        display: block;
+    th:first-child,
+    td:first-child {
+        position: sticky;
         left: 0;
-        width: 100%;
-        margin-bottom: 0.5rem;
-        text-align: left;
-        font-weight: 700;
-        color: var(--text);
-        opacity: 0.8;
-    }
-
-    .history-table td {
-        text-align: center;
-    }
-
-    .history-table td.action-btns {
-        padding: 1.5rem 0.5rem 1rem;
+        background: var(--background);
+        z-index: 1;
     }
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
+/* Table styles for smaller screens */
+@media (max-width: 480px) {
+    .content {
+        padding: 1.5rem 1rem;
     }
-    50% {
-        transform: scale(1.03);
+
+    table {
+        font-size: 0.9rem;
     }
-    100% {
-        transform: scale(1);
+
+    th, td {
+        padding: 0.6rem 0.8rem;
+        min-width: 100px;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
     }
 }
 
-.no-records {
-    text-align: center;
-    color: rgba(255, 255, 255, 0.7);
-    padding: 2rem;
-    font-style: italic;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    margin-top: 1rem;
-}
+/* Very small screens */
+@media (max-width: 380px) {
+    table {
+        font-size: 0.85rem;
+    }
 
-/* Fix for the result shimmer effect */
-.result.show p {
-    background: linear-gradient(
-        90deg,
-        rgba(6, 190, 182, 1) 0%,
-        rgba(72, 177, 191, 1) 50%,
-        rgba(6, 190, 182, 1) 100%
-    );
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: none !important;
-    position: relative;
-    z-index: 5;
-    animation: shimmer-text 2s infinite linear;
-}
+    th, td {
+        padding: 0.5rem 0.6rem;
+        min-width: 90px;
+    }
 
-@keyframes shimmer-text {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 200% 50%;
-    }
-}
-
-@keyframes floatAnimation {
-    0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-    25% {
-        transform: translate(10px, 15px) rotate(5deg);
-    }
-    50% {
-        transform: translate(-5px, 10px) rotate(-5deg);
-    }
-    75% {
-        transform: translate(-15px, -10px) rotate(3deg);
-    }
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-20px);
-    }
-}
-
-@keyframes wave-animation {
-    0% {
-        background-position-x: 0;
-    }
-    100% {
-        background-position-x: 1000px;
+    input[type="number"],
+    input[type="text"],
+    select {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
     }
 }
